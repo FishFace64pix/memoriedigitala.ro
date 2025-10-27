@@ -1,0 +1,432 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import { useLanguage } from '../../contexts/LanguageContext';
+import LanguageToggle from '../../components/LanguageToggle';
+import toast from 'react-hot-toast';
+
+export default function GuestUploadPage() {
+  const params = useParams();
+  const accessKey = params.access_key as string;
+  const { t } = useLanguage();
+
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadType, setUploadType] = useState<'photo' | 'video' | 'audio'>('photo');
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [uploaded, setUploaded] = useState(false);
+  const [voiceMessageEnabled, setVoiceMessageEnabled] = useState(false);
+  const [recording, setRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    // Check if voice messages are enabled for this event
+    const checkVoiceMessages = async () => {
+      try {
+        const response = await fetch(`/api/check-event?accessKey=${accessKey}`);
+        const data = await response.json();
+        if (data.event) {
+          setVoiceMessageEnabled(data.event.voice_message_enabled || false);
+        }
+      } catch (error) {
+        console.error('Error checking event:', error);
+      }
+    };
+    checkVoiceMessages();
+  }, [accessKey]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+      setFile(selectedFile);
+      
+      // Create preview for images
+      if (uploadType === 'photo' && selectedFile.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreview(reader.result as string);
+        };
+        reader.readAsDataURL(selectedFile);
+      } else {
+        setPreview(null);
+      }
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!file) return;
+
+    setUploading(true);
+    setUploadProgress(0);
+    toast.loading(t('Uploading...', 'Se încarcă...'), { id: 'upload' });
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('accessKey', accessKey);
+      formData.append('type', uploadType);
+
+      const xhr = new XMLHttpRequest();
+      
+      xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable) {
+          const progress = (e.loaded / e.total) * 100;
+          setUploadProgress(progress);
+        }
+      });
+
+      const response = await new Promise<{ success: boolean; error?: string }>((resolve, reject) => {
+        xhr.addEventListener('loadend', () => {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              resolve({ success: true });
+            } else {
+              try {
+                const data = JSON.parse(xhr.responseText);
+                resolve({ success: false, error: data.error });
+              } catch {
+                resolve({ success: false, error: 'Upload failed' });
+              }
+            }
+          }
+        });
+
+        xhr.addEventListener('error', () => reject(new Error('Network error')));
+
+        xhr.open('POST', '/api/upload-media');
+        xhr.send(formData);
+      });
+
+      if (response.success) {
+        toast.success(t('Upload successful!', 'Încărcare reușită!'), { id: 'upload' });
+        setUploaded(true);
+        setFile(null);
+        setPreview(null);
+        // Auto-refresh after 2 seconds
+        setTimeout(() => {
+          setUploaded(false);
+        }, 3000);
+      } else {
+        toast.error(response.error || t('Upload failed', 'Încărcare eșuată'), { id: 'upload' });
+      }
+    } catch (error) {
+      console.error('Error uploading:', error);
+      toast.error(t('Error uploading file. Please try again.', 'Eroare la încărcarea fișierului. Vă rugăm să încercați din nou.'), { id: 'upload' });
+    } finally {
+      setUploading(false);
+      setUploadProgress(0);
+    }
+  };
+
+  // Drag and drop handlers
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    const droppedFile = e.dataTransfer.files[0];
+    if (droppedFile && (uploadType === 'photo' || uploadType === 'video')) {
+      if (uploadType === 'photo' && !droppedFile.type.startsWith('image/')) {
+        toast.error(t('Please select an image file', 'Te rugăm să selectezi o imagine'));
+        return;
+      }
+      if (uploadType === 'video' && !droppedFile.type.startsWith('video/')) {
+        toast.error(t('Please select a video file', 'Te rugăm să selectezi un videoclip'));
+        return;
+      }
+      
+      setFile(droppedFile);
+      
+      // Create preview for images
+      if (uploadType === 'photo' && droppedFile.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setPreview(reader.result as string);
+        };
+        reader.readAsDataURL(droppedFile);
+      } else {
+        setPreview(null);
+      }
+    }
+  };
+
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const chunks: Blob[] = [];
+
+      recorder.ondataavailable = (event) => {
+        chunks.push(event.data);
+      };
+
+      recorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'audio/webm' });
+        setAudioBlob(blob);
+      };
+
+      recorder.start();
+      setMediaRecorder(recorder);
+      setRecording(true);
+      setAudioChunks(chunks);
+    } catch (error) {
+      console.error('Error starting recording:', error);
+      alert(t('Could not access microphone. Please allow microphone access.', 'Nu s-a putut accesa microfonul. Te rugăm să permiți accesul la microfon.'));
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+      setMediaRecorder(null);
+      setRecording(false);
+    }
+  };
+
+  const handleVoiceUpload = async () => {
+    if (!audioBlob) return;
+
+    setUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', audioBlob, 'voice-message.webm');
+      formData.append('accessKey', accessKey);
+      formData.append('type', 'audio');
+
+      const response = await fetch('/api/upload-media', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        setUploaded(true);
+        setAudioBlob(null);
+        setTimeout(() => {
+          setUploaded(false);
+        }, 2000);
+      } else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.error || 'Upload failed'}`);
+      }
+    } catch (error) {
+      console.error('Error uploading audio:', error);
+      alert(t('Error uploading audio', 'Eroare la încărcarea audio'));
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  if (uploaded) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-xl p-12 max-w-md text-center">
+          <div className="text-6xl mb-4">✓</div>
+          <h1 className="text-3xl font-bold mb-4 text-green-600">{t('Thank you!', 'Mulțumim!')}</h1>
+              <p className="text-gray-900 font-bold mb-6">
+            {t('Your memory has been uploaded successfully. The host will be able to see it in a few moments.', 'Amintirea ta a fost încărcată cu succes. Gazda o va putea vedea în câteva momente.')}
+          </p>
+          <button
+            onClick={() => setUploaded(false)}
+            className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+          >
+            {t('Upload Another Memory', 'Încarcă Altă Amintire')}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 max-w-lg w-full relative">
+        {/* Language Toggle */}
+        <div className="absolute top-4 right-4">
+          <LanguageToggle />
+        </div>
+        
+        <h1 className="text-3xl font-bold mb-2 text-center text-gray-900">{t('Share Your Memory', 'Împărtășește Amintirea Ta')}</h1>
+        <p className="text-gray-900 font-bold text-center mb-8">{t('Choose how you want to share your memory', 'Alege modul în care vrei să împărtășești amintirea ta')}</p>
+
+        {/* Upload Type Selector */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <button
+            onClick={() => setUploadType('photo')}
+            className={`p-4 rounded-lg border-2 transition ${
+              uploadType === 'photo' ? 'border-blue-600 bg-blue-50' : 'border-gray-200'
+            }`}
+          >
+            📸 {t('Photo', 'Foto')}
+          </button>
+          <button
+            onClick={() => setUploadType('video')}
+            className={`p-4 rounded-lg border-2 transition ${
+              uploadType === 'video' ? 'border-blue-600 bg-blue-50' : 'border-gray-200'
+            }`}
+          >
+            🎥 {t('Video', 'Video')}
+          </button>
+          {voiceMessageEnabled && (
+            <button
+              onClick={() => setUploadType('audio')}
+              className={`p-4 rounded-lg border-2 transition ${
+                uploadType === 'audio' ? 'border-blue-600 bg-blue-50' : 'border-gray-200'
+              }`}
+            >
+              🎤 {t('Message', 'Mesaj')}
+            </button>
+          )}
+        </div>
+
+        {/* Photo/Video Upload */}
+        {(uploadType === 'photo' || uploadType === 'video') && (
+          <div className="space-y-4">
+            <label className="block">
+              <input
+                type="file"
+                accept={uploadType === 'photo' ? 'image/*' : 'video/*'}
+                onChange={handleFileChange}
+                className="hidden"
+                id="fileInput"
+              />
+              <div
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-all ${
+                  isDragging 
+                    ? 'border-blue-600 bg-blue-100 scale-105' 
+                    : 'border-gray-300 hover:border-blue-600 hover:bg-blue-50'
+                }`}
+                onClick={() => document.getElementById('fileInput')?.click()}
+              >
+                <div className="text-4xl mb-4">
+                  {uploadType === 'photo' ? '📸' : '🎥'}
+                </div>
+                <p className="text-gray-900 font-bold mb-2">
+                  {file ? file.name : isDragging 
+                    ? t('📁 Drop here', '📁 Bırak buraya') 
+                    : t('Click or drag to upload', 'Tıkla veya sürükle')}
+                </p>
+                {!file && (
+                  <p className="text-gray-500 text-sm">
+                    {uploadType === 'photo' ? t('JPG, PNG, WebP', 'JPG, PNG, WebP') : t('MP4, WebM, MOV', 'MP4, WebM, MOV')}
+                  </p>
+                )}
+              </div>
+            </label>
+
+            {/* Image Preview */}
+            {preview && uploadType === 'photo' && (
+              <div className="relative w-full">
+                <img 
+                  src={preview} 
+                  alt="Preview" 
+                  className="w-full h-64 object-cover rounded-lg border-2 border-blue-200"
+                />
+                <button
+                  onClick={() => {
+                    setFile(null);
+                    setPreview(null);
+                  }}
+                  className="absolute top-2 right-2 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold hover:bg-red-700 transition"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
+
+            {/* Upload Progress Bar */}
+            {uploading && (
+              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div 
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 h-full transition-all duration-300 ease-out"
+                  style={{ width: `${uploadProgress}%` }}
+                />
+              </div>
+            )}
+
+            {file && (
+              <div className="space-y-2">
+                <button
+                  onClick={handleUpload}
+                  disabled={uploading}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {uploading 
+                    ? `${Math.round(uploadProgress)}% - ${t('Uploading...', 'Se încarcă...')}` 
+                    : t('📤 Send', '📤 Trimite')}
+                </button>
+                <button
+                  onClick={() => {
+                    setFile(null);
+                    setPreview(null);
+                  }}
+                  disabled={uploading}
+                  className="w-full bg-gray-200 text-gray-700 py-2 rounded-lg font-semibold hover:bg-gray-300 transition disabled:opacity-50"
+                >
+                  {t('Cancel', 'İptal')}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Audio Recording */}
+        {uploadType === 'audio' && voiceMessageEnabled && (
+          <div className="space-y-4">
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
+              <div className="text-4xl mb-4">🎤</div>
+              <p className="text-gray-900 font-bold mb-4">{t('Record your voice message', 'Înregistrează mesajul tău vocal')}</p>
+              
+              {!recording ? (
+                <button
+                  onClick={startRecording}
+                  className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+                >
+                  {t('Start Recording', 'Începe Înregistrarea')}
+                </button>
+              ) : (
+                <div className="space-y-4">
+                  <div className="text-3xl animate-pulse text-red-600">●</div>
+                  <p className="text-gray-900 font-bold">{t('Recording...', 'Se înregistrează...')}</p>
+                  <button
+                    onClick={stopRecording}
+                    className="bg-red-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-red-700 transition"
+                  >
+                    {t('Stop Recording', 'Oprește Înregistrarea')}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {audioBlob && (
+              <button
+                onClick={handleVoiceUpload}
+                disabled={uploading}
+                className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+              >
+                {uploading ? t('Uploading...', 'Se încarcă...') : t('Send Message', 'Trimite Mesajul')}
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+

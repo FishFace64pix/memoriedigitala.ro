@@ -1,0 +1,51 @@
+📋 RACKHOST SMTP KURULUM ADIMLARI
+
+═══════════════════════════════════════════════════════════
+
+1️⃣ CPANEL'DE EMAIL OLUŞTURUN
+─────────────────────────────────────────────────────────────
+
+cPanel → Email Accounts → Create
+Email: noreply@yourdomain.ro
+Password: (güçlü bir şifre - hatırlayın!)
+
+═══════════════════════════════════════════════════════════
+
+2️⃣ .ENV.LOCAL'E EKLEYİN
+─────────────────────────────────────────────────────────────
+
+Dosyayı açın: memorie-digitala/.env.local
+
+Ekle:
+SMTP_HOST=cp01.rackhost.eu
+SMTP_PORT=465
+SMTP_USER=noreply@yourdomain.ro
+SMTP_PASS=your-password-here
+FROM_EMAIL=noreply@yourdomain.ro
+
+═══════════════════════════════════════════════════════════
+
+3️⃣ UYGULAMAYI RESTART EDİN
+─────────────────────────────────────────────────────────────
+
+Terminal'de:
+Ctrl+C (durdur)
+npm run dev (başlat)
+
+═══════════════════════════════════════════════════════════
+
+4️⃣ TEST EDİN
+─────────────────────────────────────────────────────────────
+
+1. http://localhost:3000
+2. Register → Login → Dashboard
+3. Order oluştur
+4. Email'in gelip gelmediğini kontrol et
+
+═══════════════════════════════════════════════════════════
+
+✅ HAZIR!
+
+═══════════════════════════════════════════════════════════
+
+

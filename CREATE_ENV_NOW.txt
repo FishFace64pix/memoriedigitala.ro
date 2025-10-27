@@ -1,0 +1,52 @@
+🔥 ACİL: .env.local DOSYASI OLUŞTUR!
+
+═══════════════════════════════════════════════════════════
+
+SORUN: Mock database kullanılıyor
+ÇÖZÜM: .env.local oluştur
+
+═══════════════════════════════════════════════════════════
+
+ADIM 1: Dosya Oluştur
+─────────────────────────────────────────────────────────────
+
+memorie-digitala/ klasöründe YENİ DOSYA:
+Adı: .env.local
+
+═══════════════════════════════════════════════════════════
+
+ADIM 2: İçeriği Ekle
+─────────────────────────────────────────────────────────────
+
+DATABASE_URL=postgresql://neondb_owner:npg_IjlxbeKT20Aq@ep-quiet-river-agzmlihl-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require
+
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_51SMbpa1U8doB97Aoxk05NqD7l6XdpdWdNwNE4q3zXp04XLbK80rIoWnw5HBbs6U5jyjgPQxsHBTHxhJU14kFwENo00sRDFGl3L
+STRIPE_SECRET_KEY=sk_test_51SMbpa1U8doB97AobhYjHnh5nTSgLJlley03jJKhDB9w1BXh4LP6ekCcnYvDAuYKW2UT3ZvA4x4bWupfsRnehMmQ00uUOipIUc
+
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+JWT_SECRET=memorie-digitala-secret-key-2024
+
+SMTP_HOST=cp01.rackhost.eu
+SMTP_PORT=465
+SMTP_USER=info@memoriedigitala.ro
+SMTP_PASS=Mr.258031.Mr
+FROM_EMAIL=info@memoriedigitala.ro
+
+═══════════════════════════════════════════════════════════
+
+ADIM 3: Restart
+─────────────────────────────────────────────────────────────
+
+Terminal'de:
+Ctrl+C
+npm run dev
+
+═══════════════════════════════════════════════════════════
+
+✅ SONRA:
+
+Register ol → Login yap → Test et!
+
+═══════════════════════════════════════════════════════════
+
+

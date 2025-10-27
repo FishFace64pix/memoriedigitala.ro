@@ -1,0 +1,129 @@
+📧 SMTP KURULUM REHBERİ
+
+═══════════════════════════════════════════════════════════
+
+💡 SMTP NEDİR?
+─────────────────────────────────────────────────────────────
+
+SMTP = Simple Mail Transfer Protocol
+- Email gönderme protokolü
+- Gmail, Outlook, SendGrid hepsi SMTP kullanır
+
+═══════════════════════════════════════════════════════════
+
+🚀 SEÇENEK 1: GMAIL (Kolay Başlangıç)
+─────────────────────────────────────────────────────────────
+
+Adımlar:
+1. Gmail hesabınızla giriş yapın
+2. google.com/settings/security → Signing in to Google
+3. "App passwords" linkine tıklayın
+4. "Mail" ve "Other (Custom name)" seçin
+5. 16 haneli şifre oluşturun
+
+.env.local'e ekleyin:
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASS=xxxx xxxx xxxx xxxx (16 haneli app password)
+FROM_EMAIL=your-email@gmail.com
+
+═══════════════════════════════════════════════════════════
+
+⚡ SEÇENEK 2: SENDGRID (Profesyonel)
+─────────────────────────────────────────────────────────────
+
+1. sendgrid.com → Create Account (FREE)
+2. Email API → Create API Key
+3. Settings → Sender Authentication → Verify
+
+.env.local'e ekleyin:
+SMTP_HOST=smtp.sendgrid.net
+SMTP_PORT=587
+SMTP_USER=apikey
+SMTP_PASS=SG.xxxxxxxxxxxxx (API key'iniz)
+FROM_EMAIL=noreply@yourdomain.com
+
+Avantajları:
+- 100 email/gün ücretsiz
+- Yüksek deliverability
+- Spam'dan korunma
+
+═══════════════════════════════════════════════════════════
+
+🔧 SEÇENEK 3: MAILGUN
+─────────────────────────────────────────────────────────────
+
+1. mailgun.com → Sign up (FREE)
+2. Sending → Domain Settings
+3. SMTP credentials al
+
+.env.local'e ekleyin:
+SMTP_HOST=smtp.mailgun.org
+SMTP_PORT=587
+SMTP_USER=postmaster@yourdomain.mailgun.org
+SMTP_PASS=your-mailgun-password
+FROM_EMAIL=noreply@yourdomain.com
+
+Avantajları:
+- 5000 email/ay ücretsiz
+- Çok hızlı
+- Tracking özellikleri
+
+═══════════════════════════════════════════════════════════
+
+✅ .ENV.LOCAL ÖRNEĞİ:
+─────────────────────────────────────────────────────────────
+
+DATABASE_URL=postgresql://...
+
+# Stripe
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# App
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+JWT_SECRET=your-secret-key
+
+# Email (Gmail Örneği)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=youremail@gmail.com
+SMTP_PASS=xxxx xxxx xxxx xxxx
+FROM_EMAIL=youremail@gmail.com
+
+# AWS S3 (İsteğe bağlı)
+AWS_ACCESS_KEY_ID=your-key
+AWS_SECRET_ACCESS_KEY=your-secret
+AWS_REGION=eu-central-1
+AWS_S3_BUCKET_NAME=memorie-digitala-media
+
+═══════════════════════════════════════════════════════════
+
+🧪 TEST:
+─────────────────────────────────────────────────────────────
+
+1. .env.local'e SMTP ayarlarını ekleyin
+2. Uygulamayı restart edin
+3. Yeni bir order oluşturun
+4. Email'in gelip gelmediğini kontrol edin
+
+═══════════════════════════════════════════════════════════
+
+💡 TAVSİYE:
+─────────────────────────────────────────────────────────────
+
+Başlangıç için Gmail kullanın:
+✓ Çok kolay kurulum
+✓ Herkesin hesabı var
+✓ Test için mükemmel
+
+Production için SendGrid:
+✓ Profesyonel
+✓ Yüksek deliverability
+✓ Tracking özellikleri
+
+═══════════════════════════════════════════════════════════
+
+

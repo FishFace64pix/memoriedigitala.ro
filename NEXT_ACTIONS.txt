@@ -1,0 +1,62 @@
+═══════════════════════════════════════════════════════════
+  MEMORIEDIGITALA.RO - SONRAKİ ADIMLAR
+═══════════════════════════════════════════════════════════
+
+✅ TAMAMLANAN İŞLER:
+─────────────────────────────────────────────────────────────
+✓ Next.js projesi oluşturuldu
+✓ Modern UI/UX tasarımı (gradients, animations)
+✓ İngilizce dil desteği
+✓ Tüm sayfalar hazır (Home, Order, Contact, FAQ, Privacy, Terms)
+✓ Stripe entegrasyonu (code ready)
+✓ PostgreSQL schema
+✓ API routes
+✓ Responsive design
+
+═══════════════════════════════════════════════════════════
+
+🎯 ŞİMDİ NE YAPALIM?
+
+1️⃣ HEMEN TEST ET (Database olmadan):
+─────────────────────────────────────────────────────────────
+   → http://localhost:3001 
+   → Tüm UI'ı kontrol et
+   → Sayfaları gez
+   → Değişiklik isteyebilirsin
+
+2️⃣ STRIPE KEY'LERİ EKLE (Test için):
+─────────────────────────────────────────────────────────────
+   a) https://stripe.com → Hesap oluştur
+   b) Dashboard → API Keys → Test keys kopyala
+   c) memorie-digitala/.env dosyası oluştur:
+   
+      DATABASE_URL=postgresql://test:test@localhost/test
+      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+      STRIPE_SECRET_KEY=sk_test_...
+      NEXT_PUBLIC_APP_URL=http://localhost:3001
+      JWT_SECRET=test-secret-key
+
+3️⃣ POSTGRESQL KUR (İsteğe bağlı):
+─────────────────────────────────────────────────────────────
+   a) PostgreSQL indir ve kur
+   b) Database oluştur: createdb memoriedigitala
+   c) Schema import et: psql memoriedigitala < database/schema.sql
+
+═══════════════════════════════════════════════════════════
+
+💡 ÖNERİLER:
+─────────────────────────────────────────────────────────────
+→ Önce UI'ı test et (database olmadan çalışır)
+→ Stripe key'lerini ekle (test mode)
+→ Sonra PostgreSQL setup yap
+→ Customization için hazır!
+
+═══════════════════════════════════════════════════════════
+
+📞 YARDIM:
+─────────────────────────────────────────────────────────────
+Herhangi bir sorunda bana sor!
+Şu an site %95 ready - sadece database bağlantısı kaldı.
+
+
+

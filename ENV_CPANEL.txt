@@ -1,0 +1,40 @@
+# cPanel Environment Variables
+# Bu dosyayı cPanel'de Node.js Environment Variables'a ekle
+
+# Database
+DATABASE_URL=postgresql://neondb_owner:npg_IjlxbeKT20Aq@ep-quiet-river-agzmlihl-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+
+# Stripe (LIVE KEYS!)
+STRIPE_SECRET_KEY=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
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_51SMbpa1U8doB97AocszafpY5F1RWIi8olnIfgxoVWUhS0df8mDCG1Z00YcteUcWaNeaCx9hrupvvoUYUED8HMUe600vWPgEKas
+NEXT_PUBLIC_STRIPE_CURRENCY=ron
+STRIPE_WEBHOOK_SECRET=whsec_0p2gjq2RoqHVfClj7CTlKNq1MfvV01eH
+
+# JWT Secret (Rastgele string üret)
+JWT_SECRET=memorie-digitala-super-secret-jwt-key-2024-abcdefghijklmnopqrstuvwxyz
+
+# App URL
+NEXT_PUBLIC_APP_URL=https://memoriedigitala.ro
+
+# Node Environment
+NODE_ENV=production
+PORT=3000
+
+# Optional: AWS S3 (Eğer kullanacaksan)
+# AWS_ACCESS_KEY_ID=
+# AWS_SECRET_ACCESS_KEY=
+# AWS_REGION=eu-central-1
+# AWS_S3_BUCKET_NAME=memorie-digitala-media
+
+# Optional: Email (Eğer kullanacaksan)
+# SMTP_HOST=smtp.gmail.com
+# SMTP_PORT=587
+# SMTP_USER=your-email@gmail.com
+# SMTP_PASS=your-app-password
+# FROM_EMAIL=noreply@memoriedigitala.ro
+
+# ⚠️ ÖNEMLİ:
+# 1. STRIPE_WEBHOOK_SECRET'i Stripe Dashboard'dan al
+# 2. JWT_SECRET için güçlü random string kullan
+# 3. Email varsa SMTP bilgilerini ekle
+

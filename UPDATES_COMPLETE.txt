@@ -1,0 +1,48 @@
+═══════════════════════════════════════════════════════════
+  ✅ YAPILAN GÜNcellemeler
+═══════════════════════════════════════════════════════════
+
+1️⃣ ADRES BİLGİLERİ EKLENDİ
+─────────────────────────────────────────────────────────────
+✓ Street Address (Sokak adresi)
+✓ City (Şehir)
+✓ Postal Code (Posta kodu)
+✓ Country (Ülke - Romania seçili)
+✓ Phone Number (Telefon)
+
+─────────────────────────────────────────────────────────────
+
+2️⃣ INPUT YAZILAR DÜZELTildI
+─────────────────────────────────────────────────────────────
+✓ Border daha koyu: border-gray-300
+✓ Placeholder yazılar: text-gray-400
+✓ Daha okunabilir!
+
+─────────────────────────────────────────────────────────────
+
+3️⃣ DATABASE ŞEMA GÜNCELLENDI
+─────────────────────────────────────────────────────────────
+Yeni alanlar:
+- host_phone
+- delivery_address
+- delivery_city
+- delivery_postal
+- delivery_country
+
+SQL'i Neon'da yeniden çalıştır!
+
+─────────────────────────────────────────────────────────────
+
+═══════════════════════════════════════════════════════════
+
+⚠️ ÖNEMLI: 
+
+1. Neon Dashboard'da güncellenmiş SQL'i çalıştır
+   File: NUMAI_SA_CREZI_DATABASE.txt
+   
+2. Eski tabel'ı sil (DROP TABLE events;) sonra yeniden oluştur
+
+═══════════════════════════════════════════════════════════
+
+
+

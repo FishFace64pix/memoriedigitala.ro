@@ -1,0 +1,93 @@
+═══════════════════════════════════════════════════════════
+  NEON DATABASE BAĞLANTISI ✅
+═══════════════════════════════════════════════════════════
+
+✅ DATABASE BAĞLANTISI HAZIR!
+─────────────────────────────────────────────────────────────
+Connection String:
+postgresql://neondb_owner:npg_IjlxbeKT20Aq@ep-quiet-river-agzmlihl-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require
+
+═══════════════════════════════════════════════════════════
+
+📊 DATABASE SCHEMA OLUŞTURMA
+─────────────────────────────────────────────────────────────
+
+Neon Dashboard'dan schema'yı oluştur:
+
+1. Neon dashboard'a git: https://console.neon.tech
+2. SQL Editor'ı aç
+3. Aşağıdaki SQL'i çalıştır:
+
+─────────────────────────────────────────────────────────────
+
+CREATE TABLE events (
+    id SERIAL PRIMARY KEY,
+    event_id VARCHAR(255) UNIQUE NOT NULL,
+    access_key VARCHAR(255) UNIQUE NOT NULL,
+    host_email VARCHAR(255) NOT NULL,
+    host_name VARCHAR(255) NOT NULL,
+    event_name VARCHAR(255),
+    event_date DATE,
+    package_type VARCHAR(50) DEFAULT 'standard',
+    qr_print_enabled BOOLEAN DEFAULT false,
+    qr_print_quantity INTEGER DEFAULT 0,
+    voice_message_enabled BOOLEAN DEFAULT false,
+    total_price DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(50) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL
+);
+
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    stripe_session_id VARCHAR(255) UNIQUE,
+    event_id VARCHAR(255) NOT NULL REFERENCES events(event_id) ON DELETE CASCADE,
+    host_email VARCHAR(255) NOT NULL,
+    host_name VARCHAR(255) NOT NULL,
+    base_price DECIMAL(10, 2) NOT NULL,
+    qr_print_price DECIMAL(10, 2) DEFAULT 0,
+    voice_message_price DECIMAL(10, 2) DEFAULT 0,
+    total_price DECIMAL(10, 2) NOT NULL,
+    currency VARCHAR(10) DEFAULT 'RON',
+    payment_status VARCHAR(50) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE media_uploads (
+    id SERIAL PRIMARY KEY,
+    event_id VARCHAR(255) NOT NULL REFERENCES events(event_id) ON DELETE CASCADE,
+    upload_type VARCHAR(50) NOT NULL,
+    file_url TEXT NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    file_size BIGINT,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_approved BOOLEAN DEFAULT true,
+    guest_ip VARCHAR(45)
+);
+
+CREATE INDEX idx_events_access_key ON events(access_key);
+CREATE INDEX idx_events_event_id ON events(event_id);
+CREATE INDEX idx_media_event_id ON media_uploads(event_id);
+CREATE INDEX idx_media_uploaded_at ON media_uploads(uploaded_at);
+CREATE INDEX idx_orders_stripe_session ON orders(stripe_session_id);
+
+─────────────────────────────────────────────────────────────
+
+VEYA: database/schema.sql dosyasını kopyala-yapıştır!
+
+═══════════════════════════════════════════════════════════
+
+🔑 STRIPE KEY'LERİ NASIL ALACAKSIN?
+─────────────────────────────────────────────────────────────
+
+1. https://stripe.com → Hesap oluştur (ücretsiz)
+2. Dashboard → Developers → API keys
+3. Test key'leri kopyala
+4. .env.local dosyasına yapıştır
+
+Detaylı rehber: HOW_TO_GET_STRIPE_KEYS.md dosyasında!
+
+═══════════════════════════════════════════════════════════
+
+
+

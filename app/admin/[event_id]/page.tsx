@@ -1,0 +1,328 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import QRCode from 'qrcode';
+import toast from 'react-hot-toast';
+import { useLanguage } from '../../contexts/LanguageContext';
+import LanguageToggle from '../../components/LanguageToggle';
+
+interface MediaItem {
+  id: number;
+  upload_type: string;
+  file_url: string;
+  file_name: string;
+  uploaded_at: string;
+}
+
+interface Event {
+  event_id: string;
+  access_key: string;
+  event_name: string;
+  qr_print_enabled: boolean;
+  voice_message_enabled: boolean;
+  total_price: number;
+  status: string;
+}
+
+export default function AdminPanel() {
+  const params = useParams();
+  const eventId = params.event_id as string;
+  const { t } = useLanguage();
+
+  const [event, setEvent] = useState<Event | null>(null);
+  const [media, setMedia] = useState<MediaItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const [showQR, setShowQR] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [notification, setNotification] = useState('');
+
+  useEffect(() => {
+    loadEventAndMedia();
+  }, [eventId]);
+
+  const loadEventAndMedia = async () => {
+    try {
+      const eventRes = await fetch(`/api/get-event?eventId=${eventId}`);
+      const eventData = await eventRes.json();
+      setEvent(eventData.event);
+
+      const mediaRes = await fetch(`/api/get-media?eventId=${eventId}`);
+      const mediaData = await mediaRes.json();
+      setMedia(mediaData.media);
+
+      if (eventData.event) {
+        const url = `${process.env.NEXT_PUBLIC_APP_URL}/e/${eventData.event.access_key}`;
+        const qrUrl = await QRCode.toDataURL(url);
+        setQrCodeUrl(qrUrl);
+      }
+    } catch (error) {
+      console.error('Error loading data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deleteMedia = async (mediaId: number) => {
+    if (!confirm('Sigur doriți să ștergeți această imagine?')) return;
+
+    try {
+      setRefreshing(true);
+      await fetch(`/api/delete-media?id=${mediaId}&eventId=${eventId}`, {
+        method: 'DELETE',
+      });
+      loadEventAndMedia();
+      toast.success('Media deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting media:', error);
+      toast.error('Error deleting media');
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  const downloadAll = async () => {
+    if (!event) return;
+    
+    try {
+      if (media.length === 0) {
+        toast.error('No media to download');
+        return;
+      }
+      toast.loading('Creating ZIP file...');
+      const downloadUrl = `/api/download-all-media?eventId=${event.event_id}`;
+      window.open(downloadUrl, '_blank');
+      toast.success('Download started!');
+    } catch (error) {
+      console.error('Error downloading all media:', error);
+      toast.error('Error downloading media');
+    }
+  };
+
+  const downloadQRTemplate = async () => {
+    if (!event) return;
+    
+    try {
+      // Create a simple HTML page with QR code that can be printed
+      const eventUrl = `${process.env.NEXT_PUBLIC_APP_URL}/e/${event.access_key}`;
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>QR Code - ${event.event_name || 'Event'}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 50px; text-align: center; }
+            .qr-container { display: inline-block; padding: 20px; border: 2px solid #000; margin: 20px; }
+            h1 { color: #1e40af; }
+            h2 { color: #6b7280; }
+            .instructions { margin-top: 30px; }
+            @media print {
+              body { padding: 0; }
+              .qr-container { page-break-after: always; }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="qr-container">
+            <h1>MemorieDigitala.ro</h1>
+            <h2>Scan to share your memories</h2>
+            <img src="${qrCodeUrl}" alt="QR Code" style="width: 300px; height: 300px;" />
+            <div class="instructions">
+              <p><strong>1. Scan this QR code with your phone</strong></p>
+              <p><strong>2. Upload your photos and videos</strong></p>
+              <p><strong>3. Share the memories!</strong></p>
+            </div>
+            <p style="color: #9ca3af; font-size: 10px;">Event ID: ${event.event_id}</p>
+          </div>
+          
+          <script>
+            // Print when page loads
+            window.onload = function() {
+              window.print();
+            };
+          </script>
+        </body>
+        </html>
+      `;
+      
+      // Create a blob and download
+      const blob = new Blob([htmlContent], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `qr-code-${event.event_id}.html`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      toast.success(t('QR code template downloaded!', 'Șablonul QR a fost descărcat!'));
+    } catch (error) {
+      console.error('Error downloading QR template:', error);
+      toast.error(t('Error downloading QR template', 'Eroare la descărcarea șablonului QR'));
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-2xl font-semibold">Se încarcă...</div>
+      </div>
+    );
+  }
+
+  if (!event) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-2xl font-semibold">Evenimentul nu a fost găsit.</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Notification Toast */}
+      {notification && (
+        <div className="fixed top-4 right-4 z-50 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg animate-slide-in">
+          {notification}
+        </div>
+      )}
+      
+      <header className="bg-white shadow-sm mb-8">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 className="text-xl md:text-2xl font-bold text-blue-600">Admin Panel</h1>
+            <div className="flex items-center gap-4">
+              <a href="/" className="text-gray-900 font-bold hover:text-blue-600 text-sm md:text-base">
+                ← Back to site
+              </a>
+              <LanguageToggle />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Event Info */}
+        <div className="bg-white rounded-lg shadow p-4 md:p-6 mb-8">
+          <h2 className="text-lg md:text-xl font-bold mb-4 text-gray-900">{event.event_name || 'Nedefinit'}</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <p className="text-gray-900 font-bold">Status:</p>
+              <p className="font-bold text-gray-900">{event.status}</p>
+            </div>
+            <div>
+              <p className="text-gray-900 font-bold">Preț:</p>
+              <p className="font-bold text-gray-900">{Number(event.total_price).toFixed(2)} RON</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid md:grid-cols-3 gap-4 mb-8">
+          <button
+            onClick={() => setShowQR(!showQR)}
+            className="bg-blue-600 text-white p-4 md:p-6 rounded-lg shadow hover:bg-blue-700 transition"
+          >
+            <div className="text-2xl md:text-3xl mb-2">📱</div>
+            <div className="font-semibold text-sm md:text-base">{t('View QR Code', 'Vizualizează QR Cod')}</div>
+          </button>
+          <button
+            onClick={downloadQRTemplate}
+            className="bg-green-600 text-white p-4 md:p-6 rounded-lg shadow hover:bg-green-700 transition"
+          >
+            <div className="text-2xl md:text-3xl mb-2">📄</div>
+            <div className="font-semibold text-sm md:text-base">{t('Download QR Template', 'Descarcă Șablon QR')}</div>
+          </button>
+          <button
+            onClick={downloadAll}
+            className="bg-purple-600 text-white p-4 md:p-6 rounded-lg shadow hover:bg-purple-700 transition"
+          >
+            <div className="text-2xl md:text-3xl mb-2">📦</div>
+            <div className="font-semibold text-sm md:text-base">{t('Download All Media', 'Descarcă Tot Media')}</div>
+          </button>
+        </div>
+
+        {/* QR Code Modal */}
+        {showQR && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg p-8 max-w-md w-full">
+              <h3 className="text-2xl font-bold mb-4 text-gray-900">{t('QR Code for Guests', 'Codul QR pentru Invitați')}</h3>
+              <div className="mb-4 flex justify-center">
+                <img src={qrCodeUrl} alt="QR Code" className="w-full max-w-xs" />
+              </div>
+              <div className="bg-gray-100 p-4 rounded mb-4 break-all border-2 border-gray-300">
+                <p className="text-xs font-mono text-gray-900 font-bold">
+                  {`${process.env.NEXT_PUBLIC_APP_URL}/e/${event.access_key}`}
+                </p>
+              </div>
+              <button
+                onClick={() => setShowQR(false)}
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg hover:shadow-lg transition-all font-semibold"
+              >
+                {t('Close', 'Închide')}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Media Gallery */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-semibold">{t('Gallery', 'Galerie')} ({media.length})</h2>
+            <button
+              onClick={() => {
+                setRefreshing(true);
+                loadEventAndMedia();
+                setRefreshing(false);
+              }}
+              disabled={refreshing}
+              className="text-blue-600 hover:text-blue-700 disabled:opacity-50"
+            >
+              {refreshing ? `⟳ ${t('Loading...', 'Se încarcă...')}` : `⟳ ${t('Refresh', 'Actualizează')}`}
+            </button>
+          </div>
+
+          {media.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="text-6xl mb-4">📷</div>
+              <p className="text-gray-900 font-bold">{t('No images uploaded yet. Share the QR code with guests!', 'Nicio imagine încărcată. Distribuie QR codul invitaților!')}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {media.map((item) => (
+                <div key={item.id} className="relative group">
+                  <div className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
+                    {item.upload_type === 'photo' ? (
+                      <img
+                        src={item.file_url}
+                        alt={item.file_name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        {item.upload_type === 'video' ? (
+                          <div className="text-4xl">🎥</div>
+                        ) : (
+                          <div className="text-4xl">🎤</div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => deleteMedia(item.id)}
+                    className="absolute top-2 right-2 bg-red-600 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+

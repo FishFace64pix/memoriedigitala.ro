@@ -1,0 +1,94 @@
+# 🚀 Git Bash'te Çalıştırılacak Komutlar
+
+## Adım 1: Git Bash'i Aç
+
+1. "memorie-digitala" klasörüne git
+2. Sağ tık → "Git Bash Here"
+
+---
+
+## Adım 2: Bu Komutları Çalıştır (Sırayla!)
+
+```bash
+# 1. Git status kontrol
+git status
+
+# 2. Tüm dosyaları ekle
+git add .
+
+# 3. Commit yap
+git commit -m "Ready for Vercel deploy"
+
+# 4. GitHub'da repo oluştur (browser'da)
+# https://github.com/new
+# Repository name: memorie-digitala
+# Public veya Private (önemli değil)
+# "Create repository" tıkla
+
+# 5. GitHub URL'ini al (önceki adımda gösterilecek)
+# Şuna benzer: https://github.com/username/memorie-digitala.git
+
+# 6. Remote ekle
+git remote add origin https://github.com/YOUR-USERNAME/memorie-digitala.git
+# ⚠️ YOUR-USERNAME'i değiştir!
+
+# 7. Push et
+git branch -M main
+git push -u origin main
+```
+
+---
+
+## Adım 3: Vercel'e Deploy
+
+GitHub repo oluştuktan sonra:
+
+1. https://vercel.com/dashboard
+2. "Add New..." → "Project"
+3. GitHub repo'yu seç
+4. "Import"
+5. Environment variables ekle
+6. "Deploy"
+
+---
+
+## ⚠️ ÖNEMLİ:
+
+### Adım 2.5'te GitHub'da repo oluştur!
+https://github.com/new
+
+**Repository Name:** memorie-digitala  
+**Description:** MemorieDigitala.ro - Event photo collection platform  
+**Public/Private:** İstediğin seç (ikisi de çalışır)  
+**Initialize README:** ❌ BOŞ BIRAK!
+
+"Create repository" tıkla.
+
+---
+
+## 🎯 Komutları Git Bash'te Sırayla Çalıştır:
+
+```bash
+# 1
+git add .
+
+# 2
+git commit -m "Ready for Vercel deploy"
+
+# 3
+# GitHub'da repo oluştur (browser'da, yukarıdaki adım)
+
+# 4
+git remote add origin https://github.com/YOUR-USERNAME/memorie-digitala.git
+
+# 5
+git branch -M main
+
+# 6
+git push -u origin main
+```
+
+---
+
+**BAŞARILAR! 🚀**
+

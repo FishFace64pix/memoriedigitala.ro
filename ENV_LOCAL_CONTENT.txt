@@ -1,0 +1,46 @@
+⚙️ .ENV.LOCAL DOSYA İÇERİĞİ
+
+═══════════════════════════════════════════════════════════
+
+DİKKAT: Bu dosyayı memorie-digitala/ klasöründe .env.local adıyla kaydedin!
+
+═══════════════════════════════════════════════════════════
+
+DATABASE_URL=postgresql://neondb_owner:npg_IjlxbeKT20Aq@ep-quiet-river-agzmlihl-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require
+
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_51SMbpa1U8doB97Aoxk05NqD7l6XdpdWdNwNE4q3zXp04XLbK80rIoWnw5HBbs6U5jyjgPQxsHBTHxhJU14kFwENo00sRDFGl3L
+STRIPE_SECRET_KEY=sk_test_51SMbpa1U8doB97AobhYjHnh5nTSgLJlley03jJKhDB9w1BXh4LP6ekCcnYvDAuYKW2UT3ZvA4x4bWupfsRnehMmQ00uUOipIUc
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
+
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+JWT_SECRET=memorie-digitala-secret-key-2024
+
+SMTP_HOST=cp01.rackhost.eu
+SMTP_PORT=465
+SMTP_USER=info@memoriedigitala.ro
+SMTP_PASS=Mr.258031.Mr
+FROM_EMAIL=info@memoriedigitala.ro
+
+═══════════════════════════════════════════════════════════
+
+✅ YAPILACAKLAR:
+─────────────────────────────────────────────────────────────
+
+1. Bu dosyanın içeriğini kopyalayın
+2. memorie-digitala/ klasörüne gidin
+3. YENİ DOSYA oluşturun: .env.local
+4. İçeriği yapıştırın
+5. Kaydedin
+6. npm run dev yapın
+
+═══════════════════════════════════════════════════════════
+
+🎉 SMTP AYARLARI HAZIR!
+
+Email: info@memoriedigitala.ro
+Host: cp01.rackhost.eu
+Port: 465
+
+═══════════════════════════════════════════════════════════
+
+
