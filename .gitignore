@@ -27,6 +27,7 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+ENV_CPANEL.txt
 
 # vercel
 .vercel
@@ -34,3 +35,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Tüm gereksiz dosyalar ignore edildi
+*.txt
+*.md
+
+# Sadece gerekli dosyalar
+!README.md
+!next.config.ts
+!package.json
+!tsconfig.json
