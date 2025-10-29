@@ -253,41 +253,44 @@ export default function GuestUploadPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 max-w-lg w-full relative">
+      <div className="bg-white rounded-2xl shadow-xl p-4 sm:p-6 md:p-12 max-w-lg w-full relative">
         {/* Language Toggle */}
-        <div className="absolute top-4 right-4">
+        <div className="absolute top-3 right-3 sm:top-4 sm:right-4">
           <LanguageToggle />
         </div>
         
-        <h1 className="text-3xl font-bold mb-2 text-center text-gray-900">{t('Share Your Memory', 'Împărtășește Amintirea Ta')}</h1>
-        <p className="text-gray-900 font-bold text-center mb-8">{t('Choose how you want to share your memory', 'Alege modul în care vrei să împărtășești amintirea ta')}</p>
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2 text-center text-gray-900 pt-10 sm:pt-0">{t('Share Your Memory', 'Împărtășește Amintirea Ta')}</h1>
+        <p className="text-sm sm:text-base text-gray-900 font-bold text-center mb-6 sm:mb-8 px-2">{t('Choose how you want to share your memory', 'Alege modul în care vrei să împărtășești amintirea ta')}</p>
 
         {/* Upload Type Selector */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 sm:mb-8">
           <button
             onClick={() => setUploadType('photo')}
-            className={`p-4 rounded-lg border-2 transition ${
+            className={`p-2 sm:p-4 rounded-lg border-2 transition min-h-[60px] sm:min-h-[80px] flex flex-col items-center justify-center text-xs sm:text-sm ${
               uploadType === 'photo' ? 'border-blue-600 bg-blue-50' : 'border-gray-200'
             }`}
           >
-            📸 {t('Photo', 'Foto')}
+            <span className="text-lg sm:text-xl mb-1">📸</span>
+            <span>{t('Photo', 'Foto')}</span>
           </button>
           <button
             onClick={() => setUploadType('video')}
-            className={`p-4 rounded-lg border-2 transition ${
+            className={`p-2 sm:p-4 rounded-lg border-2 transition min-h-[60px] sm:min-h-[80px] flex flex-col items-center justify-center text-xs sm:text-sm ${
               uploadType === 'video' ? 'border-blue-600 bg-blue-50' : 'border-gray-200'
             }`}
           >
-            🎥 {t('Video', 'Video')}
+            <span className="text-lg sm:text-xl mb-1">🎥</span>
+            <span>{t('Video', 'Video')}</span>
           </button>
           {voiceMessageEnabled && (
             <button
               onClick={() => setUploadType('audio')}
-              className={`p-4 rounded-lg border-2 transition ${
+              className={`p-2 sm:p-4 rounded-lg border-2 transition min-h-[60px] sm:min-h-[80px] flex flex-col items-center justify-center text-xs sm:text-sm ${
                 uploadType === 'audio' ? 'border-blue-600 bg-blue-50' : 'border-gray-200'
               }`}
             >
-              🎤 {t('Message', 'Mesaj')}
+              <span className="text-lg sm:text-xl mb-1">🎤</span>
+              <span>{t('Message', 'Mesaj')}</span>
             </button>
           )}
         </div>
@@ -307,23 +310,23 @@ export default function GuestUploadPage() {
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
-                className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-all ${
+                className={`border-2 border-dashed rounded-lg p-6 sm:p-12 text-center cursor-pointer transition-all min-h-[120px] sm:min-h-[180px] flex flex-col items-center justify-center ${
                   isDragging 
                     ? 'border-blue-600 bg-blue-100 scale-105' 
                     : 'border-gray-300 hover:border-blue-600 hover:bg-blue-50'
                 }`}
                 onClick={() => document.getElementById('fileInput')?.click()}
               >
-                <div className="text-4xl mb-4">
+                <div className="text-3xl sm:text-4xl mb-2 sm:mb-4">
                   {uploadType === 'photo' ? '📸' : '🎥'}
                 </div>
-                <p className="text-gray-900 font-bold mb-2">
+                <p className="text-sm sm:text-base text-gray-900 font-bold mb-1 sm:mb-2 px-2">
                   {file ? file.name : isDragging 
                     ? t('📁 Drop here', '📁 Bırak buraya') 
                     : t('Click or drag to upload', 'Tıkla veya sürükle')}
                 </p>
                 {!file && (
-                  <p className="text-gray-500 text-sm">
+                  <p className="text-xs sm:text-sm text-gray-500">
                     {uploadType === 'photo' ? t('JPG, PNG, WebP', 'JPG, PNG, WebP') : t('MP4, WebM, MOV', 'MP4, WebM, MOV')}
                   </p>
                 )}

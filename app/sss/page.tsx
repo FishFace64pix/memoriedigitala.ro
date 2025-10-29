@@ -119,33 +119,33 @@ export default function FAQPage() {
       </header>
 
       <div className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
+        <div className="text-center mb-8 sm:mb-12">
           <div className="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">
             ❓ Frequently Asked Questions
           </div>
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">How It Works</h1>
-          <p className="text-xl text-gray-900 font-bold">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">How It Works</h1>
+          <p className="text-base sm:text-lg md:text-xl text-gray-900 font-bold px-4">
             Find answers to the most common questions about MemorieDigitala.ro
           </p>
         </div>
 
         {faqs.map((category, categoryIndex) => (
-        <div key={categoryIndex} className="mb-12">
-          <h2 className="text-3xl font-bold mb-6 text-gray-900">{category.category}</h2>
-            <div className="space-y-4">
+        <div key={categoryIndex} className="mb-8 sm:mb-12 px-4">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-gray-900">{category.category}</h2>
+            <div className="space-y-3 sm:space-y-4">
               {category.questions.map((faq, index) => {
                 const faqIndex = categoryIndex * 100 + index; // Unique index
                 return (
                   <div key={index} className="bg-white rounded-lg shadow-sm">
                     <button
                       onClick={() => setOpenFAQ(openFAQ === faqIndex ? null : faqIndex)}
-                      className="w-full px-6 py-4 text-left flex justify-between items-center hover:bg-gray-50 rounded-lg transition-all"
+                      className="w-full px-4 sm:px-6 py-3 sm:py-4 text-left flex justify-between items-center hover:bg-gray-50 rounded-lg transition-all min-h-[44px]"
                     >
-                      <span className="font-bold text-lg text-gray-900">{faq.q}</span>
-                      <span className="text-2xl font-bold text-gray-900">{openFAQ === faqIndex ? '−' : '+'}</span>
+                      <span className="font-bold text-base sm:text-lg text-gray-900 pr-4 flex-1 text-left">{faq.q}</span>
+                      <span className="text-xl sm:text-2xl font-bold text-gray-900 flex-shrink-0">{openFAQ === faqIndex ? '−' : '+'}</span>
                     </button>
                     {openFAQ === faqIndex && (
-                      <div className="px-6 pb-4 text-gray-900 font-medium leading-relaxed">{faq.a}</div>
+                      <div className="px-4 sm:px-6 pb-4 text-sm sm:text-base text-gray-900 font-medium leading-relaxed">{faq.a}</div>
                     )}
                   </div>
                 );

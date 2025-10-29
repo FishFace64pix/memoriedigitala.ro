@@ -8,6 +8,7 @@ import LanguageToggle from './components/LanguageToggle';
 export default function Home() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { currentLang, t } = useLanguage();
 
   useEffect(() => {
@@ -51,32 +52,96 @@ export default function Home() {
       {/* Modern Header with Glass Effect */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-white/20 shadow-sm">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <Link href="/" className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:scale-105 transition-transform">
+          <div className="flex justify-between items-center">
+            <Link href="/" className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:scale-105 transition-transform">
               📸 MemorieDigitala
             </Link>
-          <nav className="flex items-center gap-2 md:gap-4 flex-wrap justify-center">
-            <Link href="/sss" className="text-gray-700 hover:text-blue-600 font-medium transition-colors text-sm md:text-base px-2 py-1">
-              {t('FAQ', 'Întrebări')}
-            </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-blue-600 font-medium transition-colors text-sm md:text-base px-2 py-1">
-              {t('Contact', 'Contact')}
-            </Link>
-            {isLoggedIn ? (
-              <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 font-medium transition-colors text-sm md:text-base px-2 py-1">
-                {t('Dashboard', 'Panou')}
+            
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-4">
+              <Link href="/sss" className="text-gray-700 hover:text-blue-600 font-medium transition-colors px-2 py-1 min-h-[44px] flex items-center">
+                {t('FAQ', 'Întrebări')}
               </Link>
-            ) : (
-              <Link href="/login" className="text-gray-700 hover:text-blue-600 font-medium transition-colors text-sm md:text-base px-2 py-1">
-                {t('Login', 'Autentificare')}
+              <Link href="/contact" className="text-gray-700 hover:text-blue-600 font-medium transition-colors px-2 py-1 min-h-[44px] flex items-center">
+                {t('Contact', 'Contact')}
               </Link>
-            )}
+              {isLoggedIn ? (
+                <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 font-medium transition-colors px-2 py-1 min-h-[44px] flex items-center">
+                  {t('Dashboard', 'Panou')}
+                </Link>
+              ) : (
+                <Link href="/login" className="text-gray-700 hover:text-blue-600 font-medium transition-colors px-2 py-1 min-h-[44px] flex items-center">
+                  {t('Login', 'Autentificare')}
+                </Link>
+              )}
               <LanguageToggle />
-              <Link href="/siparis" className="px-4 md:px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all text-sm md:text-base">
+              <Link href="/siparis" className="px-4 md:px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all min-h-[44px] flex items-center">
                 {t('Order Now', 'Comandă Acum')}
               </Link>
             </nav>
+
+            {/* Mobile Navigation */}
+            <div className="flex md:hidden items-center gap-2">
+              <LanguageToggle />
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 rounded-lg hover:bg-gray-100 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+                aria-label="Menu"
+              >
+                <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  {mobileMenuOpen ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  )}
+                </svg>
+              </button>
+            </div>
           </div>
+
+          {/* Mobile Menu Dropdown */}
+          {mobileMenuOpen && (
+            <nav className="md:hidden mt-4 pb-4 border-t border-gray-200 pt-4 space-y-2">
+              <Link 
+                href="/sss" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex text-gray-700 hover:text-blue-600 font-medium transition-colors px-4 py-3 rounded-lg hover:bg-gray-50 min-h-[44px] items-center"
+              >
+                {t('FAQ', 'Întrebări')}
+              </Link>
+              <Link 
+                href="/contact" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex text-gray-700 hover:text-blue-600 font-medium transition-colors px-4 py-3 rounded-lg hover:bg-gray-50 min-h-[44px] items-center"
+              >
+                {t('Contact', 'Contact')}
+              </Link>
+              {isLoggedIn ? (
+                <Link 
+                  href="/dashboard" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex text-gray-700 hover:text-blue-600 font-medium transition-colors px-4 py-3 rounded-lg hover:bg-gray-50 min-h-[44px] items-center"
+                >
+                  {t('Dashboard', 'Panou')}
+                </Link>
+              ) : (
+                <Link 
+                  href="/login" 
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex text-gray-700 hover:text-blue-600 font-medium transition-colors px-4 py-3 rounded-lg hover:bg-gray-50 min-h-[44px] items-center"
+                >
+                  {t('Login', 'Autentificare')}
+                </Link>
+              )}
+              <Link 
+                href="/siparis" 
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold hover:shadow-lg transition-all text-center min-h-[44px] items-center justify-center"
+              >
+                {t('Order Now', 'Comandă Acum')}
+              </Link>
+            </nav>
+          )}
         </div>
       </header>
 

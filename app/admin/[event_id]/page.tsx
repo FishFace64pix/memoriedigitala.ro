@@ -189,12 +189,12 @@ export default function AdminPanel() {
         </div>
       )}
       
-      <header className="bg-white shadow-sm mb-8">
+      <header className="bg-white shadow-sm mb-6 sm:mb-8">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <h1 className="text-xl md:text-2xl font-bold text-blue-600">Admin Panel</h1>
-            <div className="flex items-center gap-4">
-              <a href="/" className="text-gray-900 font-bold hover:text-blue-600 text-sm md:text-base">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-blue-600">Admin Panel</h1>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full sm:w-auto">
+              <a href="/" className="text-gray-900 font-bold hover:text-blue-600 text-sm md:text-base min-h-[44px] flex items-center">
                 ← Back to site
               </a>
               <LanguageToggle />
@@ -220,27 +220,27 @@ export default function AdminPanel() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid md:grid-cols-3 gap-4 mb-8">
+        <div className="grid sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8 px-4">
           <button
             onClick={() => setShowQR(!showQR)}
-            className="bg-blue-600 text-white p-4 md:p-6 rounded-lg shadow hover:bg-blue-700 transition"
+            className="bg-blue-600 text-white p-4 sm:p-6 rounded-lg shadow hover:bg-blue-700 transition min-h-[100px] sm:min-h-[120px] flex flex-col items-center justify-center"
           >
-            <div className="text-2xl md:text-3xl mb-2">📱</div>
-            <div className="font-semibold text-sm md:text-base">{t('View QR Code', 'Vizualizează QR Cod')}</div>
+            <div className="text-2xl sm:text-3xl mb-2">📱</div>
+            <div className="font-semibold text-xs sm:text-sm text-center">{t('View QR Code', 'Vizualizează QR Cod')}</div>
           </button>
           <button
             onClick={downloadQRTemplate}
-            className="bg-green-600 text-white p-4 md:p-6 rounded-lg shadow hover:bg-green-700 transition"
+            className="bg-green-600 text-white p-4 sm:p-6 rounded-lg shadow hover:bg-green-700 transition min-h-[100px] sm:min-h-[120px] flex flex-col items-center justify-center"
           >
-            <div className="text-2xl md:text-3xl mb-2">📄</div>
-            <div className="font-semibold text-sm md:text-base">{t('Download QR Template', 'Descarcă Șablon QR')}</div>
+            <div className="text-2xl sm:text-3xl mb-2">📄</div>
+            <div className="font-semibold text-xs sm:text-sm text-center">{t('Download QR Template', 'Descarcă Șablon QR')}</div>
           </button>
           <button
             onClick={downloadAll}
-            className="bg-purple-600 text-white p-4 md:p-6 rounded-lg shadow hover:bg-purple-700 transition"
+            className="bg-purple-600 text-white p-4 sm:p-6 rounded-lg shadow hover:bg-purple-700 transition min-h-[100px] sm:min-h-[120px] flex flex-col items-center justify-center"
           >
-            <div className="text-2xl md:text-3xl mb-2">📦</div>
-            <div className="font-semibold text-sm md:text-base">{t('Download All Media', 'Descarcă Tot Media')}</div>
+            <div className="text-2xl sm:text-3xl mb-2">📦</div>
+            <div className="font-semibold text-xs sm:text-sm text-center">{t('Download All Media', 'Descarcă Tot Media')}</div>
           </button>
         </div>
 

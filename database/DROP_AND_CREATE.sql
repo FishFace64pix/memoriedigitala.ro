@@ -85,3 +85,5 @@ CREATE INDEX idx_media_event_id ON media_uploads(event_id);
 CREATE INDEX idx_media_uploaded_at ON media_uploads(uploaded_at);
 CREATE INDEX idx_orders_stripe_session ON orders(stripe_session_id);
 
+
+

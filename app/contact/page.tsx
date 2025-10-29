@@ -34,19 +34,19 @@ export default function ContactPage() {
 
       <div className="container mx-auto px-4 py-20">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center mb-8 sm:mb-12">
             <div className="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">
               📞 {t('Contact Us', 'Contactează-ne')}
             </div>
-            <h1 className="text-5xl font-bold text-gray-900 mb-4">{t('Get in Touch', 'Ia Legătura')}</h1>
-            <p className="text-xl text-gray-700 font-medium">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">{t('Get in Touch', 'Ia Legătura')}</h1>
+            <p className="text-base sm:text-lg md:text-xl text-gray-700 font-medium px-4">
               {t('Have questions or need support? We\'re here to help!', 'Ai întrebări sau ai nevoie de suport? Suntem aici pentru tine!')}
             </p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
             {/* Contact Form */}
-            <div className="bg-white rounded-3xl shadow-xl p-8">
+            <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl p-6 sm:p-8">
               <h2 className="text-2xl font-bold mb-6 text-gray-900">{t('Send a Message', 'Trimite un Mesaj')}</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
@@ -56,7 +56,7 @@ export default function ContactPage() {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 font-medium"
+                    className="w-full px-4 sm:px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 font-medium text-base"
                     placeholder={t('Your name', 'Numele tău')}
                   />
                 </div>
@@ -68,7 +68,7 @@ export default function ContactPage() {
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 font-medium"
+                    className="w-full px-4 sm:px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 font-medium text-base"
                     placeholder="your@email.com"
                   />
                 </div>
@@ -80,7 +80,7 @@ export default function ContactPage() {
                     rows={6}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 font-medium"
+                    className="w-full px-4 sm:px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 font-medium text-base"
                     placeholder={t('Your message...', 'Mesajul tău...')}
                   />
                 </div>
@@ -95,7 +95,7 @@ export default function ContactPage() {
             </div>
 
             {/* Contact Info */}
-            <div className="bg-white rounded-3xl shadow-xl p-8">
+            <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl p-6 sm:p-8">
               <h2 className="text-2xl font-bold mb-6 text-gray-900">{t('Contact Information', 'Informații de Contact')}</h2>
               
               <div className="space-y-6">

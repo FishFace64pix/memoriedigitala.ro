@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   title: "MemorieDigitala.ro - Colectează toate amintirile evenimentului într-un singur loc",
   description: "Colectează fără efort toate fotografiile, videoclipurile și mesajele de la invitați cu un singur cod QR. Fără aplicații, fără înregistrări.",
   keywords: "fotografii eveniment, QR code, galerie foto, evenimente, nunți, botezuri",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes",
 };
 
 export default function RootLayout({

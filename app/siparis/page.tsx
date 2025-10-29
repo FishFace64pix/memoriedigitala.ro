@@ -101,8 +101,8 @@ export default function OrderPage() {
         </div>
 
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 md:gap-8">
-          {/* Left Column: Order Summary */}
-          <div className="md:col-span-2 bg-white rounded-3xl shadow-2xl p-6 md:p-10">
+          {/* Left Column: Order Form */}
+          <div className="md:col-span-2 bg-white rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-10 order-2 md:order-1">
             <form onSubmit={handleSubmit} className="space-y-6">
             {/* Contact Information */}
             <div className="mb-8">
@@ -119,7 +119,7 @@ export default function OrderPage() {
                     required
                     value={formData.hostName}
                     onChange={(e) => setFormData({ ...formData, hostName: e.target.value })}
-                    className="w-full px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder:text-gray-600 placeholder:font-medium text-gray-900 font-medium"
+                    className="w-full px-4 sm:px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder:text-gray-600 placeholder:font-medium text-gray-900 font-medium text-base"
                     placeholder={t('ex: John Smith', 'ex: Ion Popescu')}
                   />
                 </div>
@@ -132,7 +132,7 @@ export default function OrderPage() {
                     required
                     value={formData.hostEmail}
                     onChange={(e) => setFormData({ ...formData, hostEmail: e.target.value })}
-                    className="w-full px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder:text-gray-600 placeholder:font-medium text-gray-900 font-medium"
+                    className="w-full px-4 sm:px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder:text-gray-600 placeholder:font-medium text-gray-900 font-medium text-base"
                     placeholder="ex: john@example.com"
                   />
                 </div>
@@ -145,7 +145,7 @@ export default function OrderPage() {
                     required
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder:text-gray-600 placeholder:font-medium text-gray-900 font-medium"
+                    className="w-full px-4 sm:px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder:text-gray-600 placeholder:font-medium text-gray-900 font-medium text-base"
                     placeholder="ex: +40 123 456 789"
                   />
                 </div>
@@ -167,7 +167,7 @@ export default function OrderPage() {
                       required
                       value={formData.address}
                       onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                      className="w-full px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder:text-gray-600 placeholder:font-medium text-gray-900 font-medium"
+                      className="w-full px-4 sm:px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder:text-gray-600 placeholder:font-medium text-gray-900 font-medium text-base"
                       placeholder="ex: Strada Principală 123"
                     />
                   </div>
@@ -180,7 +180,7 @@ export default function OrderPage() {
                       required
                       value={formData.city}
                       onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                      className="w-full px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder:text-gray-600 placeholder:font-medium text-gray-900 font-medium"
+                      className="w-full px-4 sm:px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder:text-gray-600 placeholder:font-medium text-gray-900 font-medium text-base"
                       placeholder="ex: București"
                     />
                   </div>
@@ -193,7 +193,7 @@ export default function OrderPage() {
                       required
                       value={formData.postalCode}
                       onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
-                      className="w-full px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder:text-gray-600 placeholder:font-medium text-gray-900 font-medium"
+                      className="w-full px-4 sm:px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder:text-gray-600 placeholder:font-medium text-gray-900 font-medium text-base"
                       placeholder="ex: 123456"
                     />
                   </div>
@@ -205,7 +205,7 @@ export default function OrderPage() {
                       required
                       value={formData.country}
                       onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                      className="w-full px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                      className="w-full px-4 sm:px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-base"
                     >
                       <option value="Romania">Romania</option>
                       <option value="Other">Other</option>
@@ -228,7 +228,7 @@ export default function OrderPage() {
                       type="text"
                       value={formData.eventName}
                       onChange={(e) => setFormData({ ...formData, eventName: e.target.value })}
-                      className="w-full px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder:text-gray-600 placeholder:font-medium text-gray-900 font-medium"
+                      className="w-full px-4 sm:px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all placeholder:text-gray-600 placeholder:font-medium text-gray-900 font-medium text-base"
                       placeholder="ex: Wedding - Anna & Alex"
                     />
                   </div>
@@ -240,7 +240,7 @@ export default function OrderPage() {
                       type="date"
                       value={formData.eventDate}
                       onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
-                      className="w-full px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 font-medium"
+                      className="w-full px-4 sm:px-5 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-gray-900 font-medium text-base"
                     />
                   </div>
                 </div>
@@ -339,7 +339,7 @@ export default function OrderPage() {
           </div>
 
           {/* Right Column: Order Summary */}
-          <div className="bg-white rounded-3xl shadow-2xl p-8 h-fit border-2 border-blue-100 sticky top-24">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 h-fit border-2 border-blue-100 sticky top-24 order-1 md:order-2">
             <h2 className="text-2xl md:text-3xl font-bold mb-6 text-gray-900">
               💰 {t('Order Summary', 'Rezumat Comandă')}
             </h2>
